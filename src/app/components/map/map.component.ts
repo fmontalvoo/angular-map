@@ -62,6 +62,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.marcador.on('move', this.getMarkerLatLng);
     }
 
+    this.drawPolyline();
+
   }
 
   /**
@@ -84,5 +86,27 @@ export class MapComponent implements OnInit, AfterViewInit {
     let latlng = event.latlng;
     this.lat = latlng.lat;
     this.lng = latlng.lng;
+  }
+
+  drawPolyline() {
+    let pointList = [
+      new LatLng(-0.1694981953266305, -78.48332756675502),
+      new LatLng(-0.1702277539547838, -78.47982082708465),
+      new LatLng(-0.17626055092305826, -78.48096650714875),
+      new LatLng(-0.17652877055342844, -78.4814438711425),
+      new LatLng(-0.17577775557867212, -78.48521032580548),
+      new LatLng(-0.17539688368707115, -78.48546712281681),
+      new LatLng(-0.16934584753561924, -78.48435700120623),
+      new LatLng(-0.16934584753561924, -78.48435700120623),
+      new LatLng(-0.1695389657402086, -78.48334298704056),
+    ];
+
+    let firstpolyline = new Polyline(pointList, {
+      color: 'blue',
+      weight: 5,
+      opacity: 0.7,
+      smoothFactor: 1
+    });
+    firstpolyline.addTo(this.map);
   }
 }
