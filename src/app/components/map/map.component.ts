@@ -1,5 +1,4 @@
-import { AfterViewInit } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 
 import { Map, tileLayer, Marker, icon } from 'leaflet';
 
@@ -12,7 +11,13 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private map!: Map;
 
-  constructor() { }
+  @Input() lat!: number;
+  @Input() lng!: number;
+  @Input() zoom: number = 14;
+  @Input() isEditing: boolean | undefined;
+
+  constructor() {
+  }
 
 
   ngOnInit(): void {
@@ -23,7 +28,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   leafletMap() {
-    this.map = new Map('map').setView([-0.180653, -78.467834], 14); //Inicializa al mapa.
+    this.map = new Map('map').setView([this.lat || 0.0, this.lng || 0.0], this.zoom); //Inicializa al mapa.
     tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { //Carga la capa base para el mapa.
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
