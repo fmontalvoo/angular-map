@@ -1,1 +1,79 @@
-<app-map [lat]="-0.17239496915142513" [lng]="-78.48261026997494" [zoom]="15" [isEditing]="true"></app-map>
+<app-map (location)="getAddress($event)" [lat]="-0.17239496915142513" [lng]="-78.48261026997494" [zoom]="15" [isEditing]="true"></app-map>
+
+<div class="container">
+    <form *ngIf="getAdrs()">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtPais">País</label>
+                    <input type="text" class="form-control" id="txtPais" placeholder="" value="{{getAdrs().country}}"
+                        readonly>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtProvincia">Provincia</label>
+                    <input type="text" class="form-control" id="txtProvincia" placeholder="" value="{{getAdrs().state}}"
+                        readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtCiudad">Ciudad</label>
+                    <input type="text" class="form-control" id="txtCiudad" placeholder="" value="{{getAdrs().city}}"
+                        readonly>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtVecindario">Vecindario</label>
+                    <input type="text" class="form-control" id="txtVecindario" placeholder=""
+                        value="{{getAdrs().neighbourhood}}" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtCalle">Calle</label>
+                    <input type="text" class="form-control" id="txtCalle" placeholder="" value="{{getAdrs().road}}"
+                        readonly>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtSuburbio">Distrito</label>
+                    <input type="text" class="form-control" id="txtSuburbio" placeholder=""
+                        value="{{getAdrs().city_district}}" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtLatitud">Latitud</label>
+                    <input type="text" class="form-control" id="txtLatitud" placeholder=""
+                        value="{{getAdrs().latitude}}" readonly>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtLongitud">Longitud</label>
+                    <input type="text" class="form-control" id="txtLongitud" placeholder=""
+                        value="{{getAdrs().longitude}}" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="txtCodigo">Codigo Postal</label>
+                    <input type="text" class="form-control" id="txtCodigo" placeholder="" value="{{getAdrs().postcode}}"
+                        readonly>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AddressModel } from './models/address.model';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-map';
+
+  private address!: AddressModel;
+
+  getAddress(address: AddressModel) {
+    this.address = address;
+  }
+
+  getAdrs() {
+    return this.address;
+  }
 }

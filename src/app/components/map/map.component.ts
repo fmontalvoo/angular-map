@@ -1,6 +1,9 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 
 import { Map, tileLayer, Marker, icon, Icon, LatLng, Polyline } from 'leaflet';
+import { AddressModel } from 'src/app/models/address.model';
+
+import { LocationService } from 'src/app/services/location.service';
 
 @Component({
   selector: 'app-map',
@@ -18,9 +21,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() zoom: number = 14;
   @Input() isEditing: boolean | undefined;
 
-  constructor() {
+  @Output() private location!: EventEmitter<AddressModel>;
+
+  private address: AddressModel;
+
+  constructor(private locationService: LocationService) {
     this.lat = this.lat || 0.0;
     this.lng = this.lng || 0.0;
+
+    this.location = new EventEmitter();
+    this.address = {};
   }
 
 
@@ -35,6 +45,10 @@ export class MapComponent implements OnInit, AfterViewInit {
    * Inicializa todo el componente del mapa.
    */
   leafletMap() {
+    if(this.map){
+      this.map.off();
+      this.map.remove();
+    }
     this.map = new Map('map').setView([this.lat, this.lng], this.zoom); //Inicializa al mapa.
     tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { //Carga la capa base para el mapa.
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
@@ -62,8 +76,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.marcador.on('move', this.getMarkerLatLng);
     }
 
-    this.drawPolyline();
-
   }
 
   /**
@@ -75,6 +87,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     let latlng = event.latlng;
     this.marcador.setLatLng(latlng);
     this.marcador.addTo(this.map);
+    this.getLocation();
   }
 
   /**
@@ -88,25 +101,51 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.lng = latlng.lng;
   }
 
-  drawPolyline() {
-    let pointList = [
-      new LatLng(-0.1694981953266305, -78.48332756675502),
-      new LatLng(-0.1702277539547838, -78.47982082708465),
-      new LatLng(-0.17626055092305826, -78.48096650714875),
-      new LatLng(-0.17652877055342844, -78.4814438711425),
-      new LatLng(-0.17577775557867212, -78.48521032580548),
-      new LatLng(-0.17539688368707115, -78.48546712281681),
-      new LatLng(-0.16934584753561924, -78.48435700120623),
-      new LatLng(-0.16934584753561924, -78.48435700120623),
-      new LatLng(-0.1695389657402086, -78.48334298704056),
-    ];
-
-    let firstpolyline = new Polyline(pointList, {
-      color: 'blue',
-      weight: 5,
-      opacity: 0.7,
-      smoothFactor: 1
+  searchLocation() {
+    this.locationService.searchLocation('Ups, Quito, Ecuador').subscribe(response => {
+      console.log(response);
+      this.lat = response[0]['lat'];
+      this.lng = response[0]['lon'];
+      this.leafletMap();
     });
-    firstpolyline.addTo(this.map);
   }
+
+  getLocation() {
+    this.locationService.getLatLngInfo(this.lat, this.lng)
+      .subscribe(response => {
+        this.address.city = response['address']['county'];
+        this.address.country = response['address']['country'];
+        this.address.latitude = this.lat;
+        this.address.longitude = this.lng;
+        this.address.neighbourhood = response['address']['neighbourhood'];
+        this.address.postcode = response['address']['postcode'];
+        this.address.road = response['address']['road'];
+        this.address.city_district = response['address']['city_district'];
+        this.address.state = response['address']['state'];
+      });
+    this.location.emit(this.address);
+  }
+
 }
+
+// drawPolyline() {
+//   let pointList = [
+//     new LatLng(-0.1694981953266305, -78.48332756675502),
+//     new LatLng(-0.1702277539547838, -78.47982082708465),
+//     new LatLng(-0.17626055092305826, -78.48096650714875),
+//     new LatLng(-0.17652877055342844, -78.4814438711425),
+//     new LatLng(-0.17577775557867212, -78.48521032580548),
+//     new LatLng(-0.17539688368707115, -78.48546712281681),
+//     new LatLng(-0.16934584753561924, -78.48435700120623),
+//     new LatLng(-0.16934584753561924, -78.48435700120623),
+//     new LatLng(-0.1695389657402086, -78.48334298704056),
+//   ];
+
+//   let firstpolyline = new Polyline(pointList, {
+//     color: 'blue',
+//     weight: 5,
+//     opacity: 0.7,
+//     smoothFactor: 1
+//   });
+//   firstpolyline.addTo(this.map);
+// }
