@@ -105,6 +105,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   public searchLocation(query: string) {
+    if (!query) return;
+
     this.locationService.searchLocation(query).subscribe(response => {
       this.places = [];
       this.address = {};
@@ -123,6 +125,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   public setLocation(place: Place) {
+    if (!place) return;
+
     this.lat = place.latitude;
     this.lng = place.longitude;
 
