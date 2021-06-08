@@ -45,7 +45,7 @@ export class MapComponent implements OnInit, AfterViewInit {
    * Inicializa todo el componente del mapa.
    */
   leafletMap() {
-    if(this.map){
+    if (this.map) {
       this.map.off();
       this.map.remove();
     }
@@ -101,8 +101,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.lng = latlng.lng;
   }
 
-  searchLocation() {
-    this.locationService.searchLocation('Ups, Quito, Ecuador').subscribe(response => {
+  searchLocation(query: string) {
+    this.locationService.searchLocation(query).subscribe(response => {
+      console.log(query);
       console.log(response);
       this.lat = response[0]['lat'];
       this.lng = response[0]['lon'];

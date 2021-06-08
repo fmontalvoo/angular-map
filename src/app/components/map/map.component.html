@@ -4,4 +4,14 @@
   </div>
 </div>
 
-<button (click)="searchLocation()">Boton</button>
+<div class="container">
+  <div class="row g-3">
+    <div class="col-md-10">
+      <input #txtBuscar type="text" class="form-control " placeholder="Buscar"
+        (keydown.enter)="searchLocation(txtBuscar.value)">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary mb-3" (click)="searchLocation(txtBuscar.value)">Buscar</button>
+    </div>
+  </div>
+</div>
