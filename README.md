@@ -1,5 +1,5 @@
 # Angular Map
 
 <p align="center">
-    <img src="img/mapa.png" />
+    <img src="img/mapa_app.png" />
 </p>
