@@ -14,4 +14,10 @@
       <button class="btn btn-primary mb-3" (click)="searchLocation(txtBuscar.value)">Buscar</button>
     </div>
   </div>
+
+  <ol *ngIf="getPlaces()">
+    <li  *ngFor="let place of getPlaces()" (click)="setLocation(place)">
+      {{place.display_name}}
+    </li>
+  </ol>
 </div>

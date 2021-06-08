@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 
 import { Map, tileLayer, Marker, icon, Icon, LatLng, Polyline } from 'leaflet';
-import { AddressModel } from 'src/app/models/address.model';
+import { Address } from 'src/app/models/address.model';
+import { Place } from 'src/app/models/place.model';
 
 import { LocationService } from 'src/app/services/location.service';
 
@@ -21,16 +22,18 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() zoom: number = 14;
   @Input() isEditing: boolean | undefined;
 
-  @Output() private location!: EventEmitter<AddressModel>;
+  @Output() private location!: EventEmitter<Address>;
 
-  private address: AddressModel;
+  private address: Address;
+  private places: Array<Place>;
 
   constructor(private locationService: LocationService) {
-    this.lat = this.lat || 0.0;
-    this.lng = this.lng || 0.0;
+    this.lat = this.lat ?? 0.0;
+    this.lng = this.lng ?? 0.0;
 
     this.location = new EventEmitter();
     this.address = {};
+    this.places = new Array();
   }
 
 
@@ -101,14 +104,36 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.lng = latlng.lng;
   }
 
-  searchLocation(query: string) {
+  public searchLocation(query: string) {
     this.locationService.searchLocation(query).subscribe(response => {
-      console.log(query);
-      console.log(response);
-      this.lat = response[0]['lat'];
-      this.lng = response[0]['lon'];
-      this.leafletMap();
+      this.places = [];
+      this.address = {};
+      this.location.emit(this.address);
+      for (let res of response) {
+        let place: Place = {
+          display_name: res['display_name'],
+          latitude: parseFloat(res['lat'] || 0.0),
+          longitude: parseFloat(res['lon'] || 0.0),
+          icon: res['icon'],
+          type: res['type'],
+        };
+        this.places.push(place);
+      }
     });
+  }
+
+  public setLocation(place: Place) {
+    this.lat = place.latitude;
+    this.lng = place.longitude;
+
+    this.leafletMap();
+
+    this.marcador.setLatLng(new LatLng(this.lat, this.lng));
+    this.marcador.addTo(this.map);
+
+    this.places = [];
+
+    this.getLocation();
   }
 
   getLocation() {
@@ -125,6 +150,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.address.state = response['address']['state'];
       });
     this.location.emit(this.address);
+  }
+
+  public getPlaces(): Place[] {
+    return this.places;
   }
 
 }

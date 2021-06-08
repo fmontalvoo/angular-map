@@ -1,3 +1,7 @@
+li{
+  cursor: pointer;
+}
+
 .map-container {
     top: 0;
     left: 0;
