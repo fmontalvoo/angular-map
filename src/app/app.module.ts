@@ -4,16 +4,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { MapComponent } from './components/map/map.component';
+
+import { MapModule } from './components/map/map.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MapComponent
-  ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    MapModule
+  ],
+  declarations: [
+    AppComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]
